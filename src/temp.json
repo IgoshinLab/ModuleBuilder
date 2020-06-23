@@ -1,0 +1,1 @@
+{"E":{"1":{"type":"conv","name":"conv","input":["x"],"params":{"num_in":64,"num_out":128,"kernel_size":7,"stride":4,"padding":3,"dilation":1,"bias":0}}}}
