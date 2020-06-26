@@ -1,7 +1,5 @@
 import React from 'react';
 import {Conv, Show} from ".";
-import {Col} from 'react-bootstrap';
-import Container from "@material-ui/core/Container";
 
 
 class Interface extends React.Component {
