@@ -1,5 +1,4 @@
 import React from "react";
-import {instanceOf} from "prop-types";
 
 export class Conv extends React.Component {
 

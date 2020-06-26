@@ -1,6 +1,5 @@
 import React from 'react';
 import './index.css';
-import PropTypes from 'prop-types';
 import {Landing} from './components/builder/landing';
 
 class App extends React.Component {
@@ -13,10 +12,5 @@ class App extends React.Component {
     )
   }
 }
-
-App.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired,
-  handleSubmit: PropTypes.func.isRequired
-};
 
 export default App;
