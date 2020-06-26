@@ -21,7 +21,7 @@ export class Show extends React.Component {
         this.props.handleSubmit("LOGIN", user);
     };
 
-    presentParams = (block) => {
+    presentParams = (block, parent_names) => {
         if(block.type === "sequential") {
             return <table>
                 <tr>
@@ -37,9 +37,9 @@ export class Show extends React.Component {
                         <th>{key}</th>
                         <th>{block.params[key].type}</th>
                         <th>{block.params[key].name}</th>
-                        <th>{this.presentParams(block.params[key])}</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th className="left_align">{this.presentParams(block.params[key], parent_names.concat(key))}</th>
+                        <th><button type="button" onClick={this.handleManipulate("EDIT",parent_names.concat(key))}>Edit</button></th>
+                        <th><button type="button" onClick={this.handleManipulate("DELETE",parent_names.concat(key))}>Delete</button></th>
                     </tr>
                 })}
             </table>
@@ -63,6 +63,11 @@ export class Show extends React.Component {
         });
     };
 
+    handleManipulate = (type, parent_names) => (event) => {
+        event.preventDefault();
+        this.props.handleManipulate(type, parent_names);
+    }
+
     render() {
         return <div className="content">
                 <div className="header">Model Structure</div>
@@ -70,6 +75,7 @@ export class Show extends React.Component {
                     {Object.keys(this.props.nets).map((key) => {
                         return <div>
                         <h3>Model: {key}</h3>
+                            <button type="button" onClick={this.handleManipulate("DELETE", [key])}>Delete</button>
                             <table>
                                 <tr>
                                     <th>Order</th>
@@ -86,12 +92,12 @@ export class Show extends React.Component {
                                 <th>{index}</th>
                                 <th>{block.type}</th>
                                 <th>{block.name}</th>
-                                <th>{block.input.map((item) => {
+                                <th className="left_align">{block.input.map((item) => {
                                     return <li>{item}</li>})}
                                 </th>
-                                <th>{this.presentParams(block)}</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                                <th className="left_align">{this.presentParams(block, [key, index])}</th>
+                                <th><button type="button" onClick={this.handleManipulate("EDIT",[key, index])}>Edit</button></th>
+                                <th><button type="button" onClick={this.handleManipulate("DELETE",[key, index])}>Delete</button></th>
                             </tr>
                             })}
                             </table>

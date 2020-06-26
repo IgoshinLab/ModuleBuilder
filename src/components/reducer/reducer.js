@@ -1,8 +1,8 @@
-import {addBlock, loadNets} from "./actions";
+import {addBlock, deleteBlock, loadNets} from "./actions";
+import {default_params, editBlock, getBlockParams} from "./block-params";
 
 export default function reducer(
     state = {
-        type: "conv",
         nets:
             {E: {
                 "1": {
@@ -20,7 +20,12 @@ export default function reducer(
                     },
                 }
             }
-        }
+        },
+        type: "conv",
+        input: [],
+        parent_names: ["E", "1"],
+        name: "x",
+        params: default_params["conv"]
     },
     action) {
     switch (action.type) {
@@ -28,6 +33,12 @@ export default function reducer(
             return addBlock(state, action.parent_names, action.content);
         case "LOAD":
             return loadNets(state, action.content);
+        case "SWITCH":
+            return getBlockParams(state, action.block_type);
+        case "EDIT":
+            return editBlock(state, action.parent_names);
+        case "DELETE":
+            return deleteBlock(state, action.parent_names);
         default:
             return state;
     }

@@ -9,7 +9,11 @@ function containerRef(ref){
 function mapStateToProps(state) {
     return {
         type: state.type,
-        nets: state.nets
+        nets: state.nets,
+        input: state.input,
+        parent_names: state.parent_names,
+        name: state.name,
+        params: state.params
     }
 }
 
@@ -30,6 +34,20 @@ function mapDispatchToProps(dispatch) {
                 content: content
             };
             dispatch(action);
+        },
+        handleSelect: (block_type) => {
+            const action = {
+                type: "SWITCH",
+                block_type: block_type
+            };
+            dispatch(action);
+        },
+        handleManipulate: (type, parent_names) => {
+            const action = {
+                type: type,
+                parent_names: parent_names
+            }
+            dispatch(action)
         },
         containerRef: containerRef,
     }

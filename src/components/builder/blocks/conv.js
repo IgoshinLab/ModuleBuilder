@@ -5,12 +5,18 @@ export class Conv extends React.Component {
 
     constructor(props) {
         super(props);
+        let params = {};
+        if(this.props.hasOwnProperty("params")) {
+            Object.keys(this.props.params).map((key) => {
+                params[key] = this.props.params[key]["value"];
+            })
+        }
         this.state = {
             parent_names: this.props.parent_names,
-            type: "conv",
-            name: "conv",
+            type: this.props.type,
+            name: this.props.name,
             input: this.props.input,
-            params: this.props.params
+            params: params
         };
         this.addAnItem = this.addAnItem.bind(this);
         this.changeAnItem = this.changeAnItem.bind(this);
@@ -18,6 +24,17 @@ export class Conv extends React.Component {
         this.changeAParam = this.changeAParam.bind(this);
         this.onChange = this.onChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+
+    componentDidMount() {
+        let params = {};
+        if(this.props.hasOwnProperty("params")) {
+            Object.keys(this.props.params).map((key) => {
+                params[key] = this.props.params[key]["value"];
+            })
+        }
+        this.setState({params: params})
     }
 
     addAnItem = (event) => {
@@ -63,13 +80,20 @@ export class Conv extends React.Component {
             type: this.state.type,
             name: this.state.name,
             input: this.state.input,
-            params: this.state.params
+            params: this.state.params,
         };
+        if(this.state.parent_names.length < 2) {
+            this.setState({
+                alert: "You have to specify a parent name!"
+            })
+            return 0
+        } else
+            this.setState({
+                alert: ""
+            })
         let parent_names = this.state.parent_names;
-
         let flag = 0;
         let nets = this.props.nets;
-
         for(let key in nets) {
             if(nets.hasOwnProperty(key))
                 if(nets[key]["name"] === content.name) flag = 1;
@@ -84,7 +108,7 @@ export class Conv extends React.Component {
 
     onChange = (event) => {
         event.preventDefault();
-
+        console.log(event.target.name);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -93,37 +117,57 @@ export class Conv extends React.Component {
     render() {
         return <div className="content">
                 <form className="form" onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="name">block_name</label>
-                        <input type="text" name="name" id="name" placeholder="conv" value={this.state.name} onChange={this.onChange}/>
-                    </div>
+                    <label>{this.props.type}</label>
+                    <table>
+                    <tr className="form-group">
+                        <th><label htmlFor="name">block_name</label></th>
+                        <th><input type="text" name="name" id="name" placeholder="conv" value={this.state.name} onChange={this.onChange}/></th>
+                    </tr>
                     {this.state.parent_names.map((value, index) => {
-                        return <div className="form-group">
-                            <label htmlFor="parent_names">parent_name_{index}</label>
-                            <input type="text" name="parent_names" placeholder={value}
-                                   onChange={this.changeAnItem(index)}/>
-                        </div>
+                        return <tr className="form-group">
+                            <th><label htmlFor="parent_names">parent_name_{index}</label></th>
+                            <th><input type="text" name="parent_names" placeholder={value}
+                                   onChange={this.changeAnItem(index)}/></th>
+                        </tr>
                     })}
-                    <button type="button" name="parent_names" onClick={this.addAnItem}>Add a parent name</button>
-                    {this.state.parent_names.length > 0 &&
-                    <button type="button" name="parent_names" onClick={this.deleteAnItem}>Delete a parent name</button>}
+                    <tr>
+                        <th><button type="button" name="parent_names" onClick={this.addAnItem}>Add a parent name</button></th>
+                        <th>
+                            {this.state.parent_names.length > 0 &&
+                            <button type="button" name="parent_names" onClick={this.deleteAnItem}>Delete a parent name</button>}</th>
+                    </tr>
                     {this.state.input.map((value, index) => {
-                        return <div className="form-group">
-                            <label htmlFor="input">input_{index}</label>
-                            <input type="text" name="input" placeholder={value}
-                                   onChange={this.changeAnItem(index)}/>
-                        </div>
+                        return <tr className="form-group">
+                            <th><label htmlFor="input">input_{index}</label></th>
+                            <th><input type="text" name="input" placeholder={value}
+                                       onChange={this.changeAnItem(index)}/></th>
+                        </tr>
                     })}
-                    <button type="button" name="input" onClick={this.addAnItem}>Add an input</button>
-                    {this.state.input.length > 0 &&
-                    <button type="button" name="input" onClick={this.deleteAnItem}>Delete an input</button>}
-                    {Object.keys(this.state.params).map((key) =>{
-                        return <div className="form-group">
-                            <label htmlFor={key}>{key}</label>
-                            <input type="text" name={key} id={key} placeholder={this.state.params[key]} value={this.state.params[key]}
-                                   onChange={this.changeAParam}/>
-                        </div>
+                    <tr>
+                        <th><button type="button" name="input" onClick={this.addAnItem}>Add an input</button></th>
+                        <th>{this.state.input.length > 0 &&
+                        <button type="button" name="input" onClick={this.deleteAnItem}>Delete an input</button>}</th>
+                    </tr>
+                    {this.props.hasOwnProperty("params") && Object.keys(this.props.params).map((key) =>{
+                        if(this.props.params[key].type === "select") {
+                            return <tr className="form-group">
+                                <th><label htmlFor={key}>{key}</label></th>
+                                <th><select name={key} id={key} onChange={this.changeAParam}>
+                                    {this.props.params[key]["value"].map((value) =>
+                                        <option value={value}>{value}</option>
+                                    )}
+                                </select></th>
+                            </tr>
+                        }
+                        else {
+                            return <tr className="form-group">
+                                <th><label htmlFor={key}>{key}</label></th>
+                                <th><input type={this.props.params[key].type} name={key} id={key} placeholder={this.props.params[key].value} value={this.state.params[key]}
+                                       onChange={this.changeAParam}/></th>
+                            </tr>
+                        }
                     })}
+                    </table>
                     <div className="footer">
                         <button type="submit" className="btn" id="btn-login">
                             Submit

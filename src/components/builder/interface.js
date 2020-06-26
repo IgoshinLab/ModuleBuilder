@@ -8,26 +8,12 @@ class Interface extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-        type: "conv",
-        input: [],
-        parent_names: ["E", "2"],
-        conv_params: {
-          num_in: 1,
-          num_out: 1,
-          kernel_size: 3,
-          stride: 1,
-          padding: 1,
-          dilation: 1,
-          bias: 0
-        }
-    }
     this.handleFiles = this.handleFiles.bind(this);
     this.saveHandler = this.saveHandler.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
-  receivedText = (e) => {
+    receivedText = (e) => {
       let lines = e.target.result;
       let rst = JSON.parse(lines);
       this.props.loadNets(rst);
@@ -47,50 +33,42 @@ class Interface extends React.Component {
       FileSaver.saveAs(blob, "temp.json");
   }
 
-  onChange = (event) => {
+  handleSelect = (event) => {
       event.preventDefault();
-      this.setState({
-          [event.target.name]: event.target.value
-      });
+      this.props.handleSelect(event.target.value);
   };
 
   render() {
     return (
         <div className="builder_interface">
+            model builder - v 0.1
           <div className="builder">
-              <Container>
-                      <Col>
-                          <Show {...this.props} containerRef={(ref) => this.current = ref} />
-                          <input type="file" id="files" name="file" onChange={this.handleFiles} />
-                          <input type="button" id="export" value="save" onClick={this.saveHandler}/>
-                      </Col>
-                      <Col sm={3}>
-                          <div className="building_block">
-                              <div className="content">
-                                  <select name="type" value={this.state.type} onChange={this.onChange}>
-                                      <option value="conv">Convolution</option>
-                                      <option value="deconv">Deconvolution</option>
-                                      <option value="linear">Linear</option>
-                                      <option value="noise">Noise</option>
-                                      <option value="AdaIN">AdaIN</option>
-                                      <option value="const">Const</option>
-                                      <option value="reshape">Reshape</option>
-                                      <option value="reparameterize">Reparameterize</option>
-                                      <option value="concat">Concat</option>
-                                      <option value="normalization">Normalization</option>
-                                      <option value="activation">Activation</option>
-                                      <option value="sequential">Sequential</option>
-                                  </select>
-                              </div>
-                          {this.state.type === "conv" &&
-                          <Conv {...this.props}
-                                parent_names={this.state.parent_names}
-                                input={this.state.input}
-                                params={this.state.conv_params}
-                                containerRef={(ref) => this.current = ref} />}
-                          </div>
-                      </Col>
-              </Container>
+              <div className="left_panel">
+                  <Show {...this.props} containerRef={(ref) => this.current = ref} />
+                  <input type="file" id="files" name="file" onChange={this.handleFiles} />
+                  <input type="button" id="export" value="save" onClick={this.saveHandler}/>
+              </div>
+              <div className="building_block">
+                  <div className="content">
+                      <select name="type" onChange={this.handleSelect}>
+                          <option value="conv">Convolution</option>
+                          <option value="deconv">Deconvolution</option>
+                          <option value="linear">Linear</option>
+                          <option value="noise">Noise</option>
+                          <option value="AdaIN">AdaIN</option>
+                          <option value="const">Const</option>
+                          <option value="reshape">Reshape</option>
+                          <option value="reparameterize">Reparameterize</option>
+                          <option value="concat">Concat</option>
+                          <option value="normalization">Normalization</option>
+                          <option value="activation">Activation</option>
+                          <option value="sequential">Sequential</option>
+                      </select>
+                  </div>
+                  <Conv key={this.props.parent_names}
+                        {...this.props}
+                        containerRef={(ref) => this.current = ref} />
+              </div>
           </div>
         </div>
     )
