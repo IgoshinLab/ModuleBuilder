@@ -50,9 +50,9 @@ export function getBlockParams(state, block_type) {
     let allState = Object.assign({}, state);
     allState.type = block_type;
     if(default_params.hasOwnProperty(block_type))
-        allState.params = default_params[block_type];
+        allState = Object.assign(allState, {params: default_params[block_type]});
     else
-        allState.params = {};
+        allState = Object.assign(allState, {params: {}});
     return allState;
 }
 
@@ -75,20 +75,23 @@ export function editBlock(state, parent_names) {
         }
     let block = {
         "input": content.hasOwnProperty("input") ? content["input"] : [],
-        "parent_names": content.hasOwnProperty("parent_names") ? content["parent_names"] : parent_names,
+        "parent_names": content.hasOwnProperty("parent_names") ?
+            content["parent_names"] : parent_names,
         "name": content.hasOwnProperty("name") ? content["name"] : "x",
     }
     if(content.hasOwnProperty("type"))
         block.type = content.type;
         if(content.hasOwnProperty("params"))
             block.params = {}
-            if(content.type !== "sequential")
+            if(content.type !== "sequential")   // Sequential has no parameters
                 Object.keys(default_params[content.type]).map((key) => {
+                    // Can only pick an option from select
                     block.params[key] = {
                         type: default_params[content.type][key].type,
-                        value: content.params[key]
+                        value: default_params[content.type][key].type === "select" ?
+                            default_params[content.type][key].value : content.params[key]
                     }
                 })
-    Object.assign(newState, block);
+    newState = Object.assign(newState, block);
     return newState;
 }

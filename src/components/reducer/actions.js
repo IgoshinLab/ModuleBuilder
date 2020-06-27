@@ -1,22 +1,26 @@
 import {default_params} from "./block-params";
 
 function updateDictParams(net, parent_names, content) {
-    if(parent_names.length === 1)
-        net[parent_names[0]] = content
-    else if (parent_names.length > 1) {
+    if(parent_names.length === 1) {
+        if (content.type === "sequential" && net[parent_names[0]].hasOwnProperty("params"))
+            content.params = net[parent_names[0]].params;
+        net[parent_names[0]] = content;
+    } else if (parent_names.length > 1) {
         if(!net.hasOwnProperty(parent_names[0]))
             net[parent_names[0]] = {params: {}}
-        net[parent_names[0]]["params"] = updateDict(net[parent_names[0]]["params"], parent_names.slice(1), content)
+        net[parent_names[0]]["params"] = updateDictParams(net[parent_names[0]]["params"], parent_names.slice(1), content)
     }
-    console.log(net);
+    //console.log(net);
     return net;
 }
 
 function updateDict(net, parent_names, content) {
-    console.log(parent_names);
+    //console.log(parent_names);
     if(!net.hasOwnProperty(parent_names[0]))
         net[parent_names[0]] = {};
     if(parent_names.length === 2) {
+        if(content.type === "sequential" && net[parent_names[0]][parent_names[1]].hasOwnProperty("params"))
+            content.params = net[parent_names[0]][parent_names[1]].params;
         net[parent_names[0]][parent_names[1]] = content;
     }
     else if (parent_names.length > 2) {
@@ -33,7 +37,7 @@ function validContentParams(content) {
     let newContent = Object.assign({}, content);
     if(newContent.hasOwnProperty("params"))
         Object.keys(newContent.params).map((key) => {
-            if(default_params[newContent.type][key].type === "text")
+            if(default_params[newContent.type][key].type === "text" || default_params[newContent.type][key].type === "number")
                 if(typeof(newContent.params[key]) == "string")
                     if(newContent.params[key].indexOf(',') === -1)
                         newContent.params[key] = parseInt(newContent.params[key]);
@@ -50,6 +54,7 @@ function validContentParams(content) {
 
 export function addBlock(state, parent_names, content) {
     let allNets = Object.assign({}, state.nets);
+    console.log(content);
     let newContent = validContentParams(content);
     allNets = updateDict(allNets, parent_names, newContent);
     let newState = Object.assign({}, state);

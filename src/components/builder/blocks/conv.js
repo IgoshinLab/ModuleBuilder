@@ -7,7 +7,10 @@ export class Conv extends React.Component {
         let params = {};
         if(this.props.hasOwnProperty("params")) {
             Object.keys(this.props.params).map((key) => {
-                params[key] = this.props.params[key]["value"];
+                if(this.props.params[key].type === "select")
+                    params[key] = this.props.params[key]["value"][0];
+                else
+                    params[key] = this.props.params[key]["value"];
             })
         }
         this.state = {
@@ -25,20 +28,27 @@ export class Conv extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-
-    componentDidMount() {
+    // This function is called whenever you change the parameters.
+    componentWillReceiveProps(nextProps) {
         let params = {};
-        if(this.props.hasOwnProperty("params")) {
-            Object.keys(this.props.params).map((key) => {
-                params[key] = this.props.params[key]["value"];
+        if(nextProps.hasOwnProperty("params")) {
+            Object.keys(nextProps.params).map((key) => {
+                if(nextProps.params[key].type === "select")
+                    params[key] = nextProps.params[key]["value"][0];
+                else
+                    params[key] = nextProps.params[key]["value"];
             })
         }
-        this.setState({params: params})
+        this.setState({
+            parent_names: nextProps.parent_names,
+            type: nextProps.type,
+            name: nextProps.name,
+            input: nextProps.input,
+            params: params});
     }
 
     addAnItem = (event) => {
         event.preventDefault();
-        console.log(event.target.name);
         let newList = this.state[event.target.name];
         newList.push("x");
         this.setState({
@@ -107,7 +117,6 @@ export class Conv extends React.Component {
 
     onChange = (event) => {
         event.preventDefault();
-        console.log(event.target.name);
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -147,7 +156,8 @@ export class Conv extends React.Component {
                         <th>{this.state.input.length > 0 &&
                         <button type="button" name="input" onClick={this.deleteAnItem}>Delete an input</button>}</th>
                     </tr>
-                    {this.props.hasOwnProperty("params") && Object.keys(this.props.params).map((key) =>{
+                    {this.state.hasOwnProperty("params") &&
+                    Object.keys(this.state.params).map((key) =>{
                         if(this.props.params[key].type === "select") {
                             return <tr className="form-group">
                                 <th><label htmlFor={key}>{key}</label></th>

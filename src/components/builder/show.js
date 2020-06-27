@@ -4,9 +4,6 @@ export class Show extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            index: 1
-        };
         this.presentParams = this.presentParams.bind(this);
         this.onChange = this.onChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

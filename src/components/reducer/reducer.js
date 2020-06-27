@@ -25,7 +25,8 @@ export default function reducer(
         input: [],
         parent_names: ["E", "1"],
         name: "x",
-        params: default_params["conv"]
+        params: default_params["conv"],
+        step: 1
     },
     action) {
     switch (action.type) {
