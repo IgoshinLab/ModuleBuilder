@@ -85,10 +85,9 @@ export class Conv extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const content = {
+        let content = {
             type: this.state.type,
             name: this.state.name,
-            input: this.state.input,
             params: this.state.params,
         };
         if(this.state.parent_names.length < 2) {
@@ -96,10 +95,14 @@ export class Conv extends React.Component {
                 alert: "You have to specify a parent name!"
             })
             return 0
-        } else
+        } else {    // Only the outer block need to have input
+            if(this.state.parent_names.length === 2) {
+                content["input"] = this.state.input;
+            }
             this.setState({
                 alert: ""
             })
+        }
         let parent_names = this.state.parent_names;
         let flag = 0;
         let nets = this.props.nets;

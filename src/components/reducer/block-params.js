@@ -74,11 +74,16 @@ export function editBlock(state, parent_names) {
                     content = content.params[parent_names[i]];
         }
     let block = {
-        "input": content.hasOwnProperty("input") ? content["input"] : [],
+        "input": [],
         "parent_names": content.hasOwnProperty("parent_names") ?
             content["parent_names"] : parent_names,
         "name": content.hasOwnProperty("name") ? content["name"] : "x",
     }
+    if(content.hasOwnProperty("input")) {
+        for(let i = 0; i < content.input.length; i++) {
+            block.input.push(content.input[i])
+        }
+    } // The input should be assigned a new memory
     if(content.hasOwnProperty("type"))
         block.type = content.type;
         if(content.hasOwnProperty("params"))

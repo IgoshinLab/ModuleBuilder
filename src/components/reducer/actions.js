@@ -2,7 +2,7 @@ import {default_params} from "./block-params";
 
 function updateDictParams(net, parent_names, content) {
     if(parent_names.length === 1) {
-        if (content.type === "sequential" && net[parent_names[0]].hasOwnProperty("params"))
+        if (content.type === "sequential" && net.hasOwnProperty(parent_names[0]))
             content.params = net[parent_names[0]].params;
         net[parent_names[0]] = content;
     } else if (parent_names.length > 1) {
@@ -15,11 +15,10 @@ function updateDictParams(net, parent_names, content) {
 }
 
 function updateDict(net, parent_names, content) {
-    //console.log(parent_names);
     if(!net.hasOwnProperty(parent_names[0]))
         net[parent_names[0]] = {};
     if(parent_names.length === 2) {
-        if(content.type === "sequential" && net[parent_names[0]][parent_names[1]].hasOwnProperty("params"))
+        if(content.type === "sequential" && net[parent_names[0]].hasOwnProperty(parent_names[1]))
             content.params = net[parent_names[0]][parent_names[1]].params;
         net[parent_names[0]][parent_names[1]] = content;
     }
@@ -35,6 +34,13 @@ function updateDict(net, parent_names, content) {
 // This function is used to transform a string of numbers into numbers
 function validContentParams(content) {
     let newContent = Object.assign({}, content);
+    if(newContent.hasOwnProperty("input")) {
+        let newInput = [];
+        for(let i = 0; i < newContent.input.length; i++) {
+            newInput.push(newContent.input[i])
+        }
+        newContent.input = newInput;
+    }
     if(newContent.hasOwnProperty("params"))
         Object.keys(newContent.params).map((key) => {
             if(default_params[newContent.type][key].type === "text" || default_params[newContent.type][key].type === "number")
@@ -54,7 +60,6 @@ function validContentParams(content) {
 
 export function addBlock(state, parent_names, content) {
     let allNets = Object.assign({}, state.nets);
-    console.log(content);
     let newContent = validContentParams(content);
     allNets = updateDict(allNets, parent_names, newContent);
     let newState = Object.assign({}, state);
