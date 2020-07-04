@@ -39,7 +39,8 @@ export const default_params = {
         axis: {type: "number", value: 1}
     },
     normalization: {
-        type: {type: "select", value: ["BatchNorm2d", "PixelNorm"]}
+        type: {type: "select", value: ["BatchNorm2d", "PixelNorm"]},
+        num_out: {type: "number", value: 1}
     },
     activation: {
         type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU"]}
