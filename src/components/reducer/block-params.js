@@ -44,6 +44,9 @@ export const default_params = {
     },
     activation: {
         type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU"]}
+    },
+    reparameterize: {
+
     }
 }
 
@@ -89,7 +92,8 @@ export function editBlock(state, parent_names) {
         block.type = content.type;
         if(content.hasOwnProperty("params"))
             block.params = {}
-            if(content.type !== "sequential")   // Sequential has no parameters
+            if(content.type !== "sequential" && content.type !== "reparameterize")   // Sequential
+                // and reparamterize has no parameters
                 Object.keys(default_params[content.type]).map((key) => {
                     // Can only pick an option from select
                     block.params[key] = {
