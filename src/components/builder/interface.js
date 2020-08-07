@@ -61,6 +61,7 @@ class Interface extends React.Component {
                           <option value="normalization">Normalization</option>
                           <option value="activation">Activation</option>
                           <option value="sequential">Sequential</option>
+                          <option value="dropout2d">Dropout2d</option>
                       </select>
                   </div>
                   <Conv key={this.props.parent_names}

@@ -87,9 +87,21 @@ export class Conv extends React.Component {
         event.preventDefault();
         let content = {
             type: this.state.type,
-            name: this.state.name,
-            params: this.state.params,
+            name: this.state.name
         };
+
+        if(this.state.type === "activation") { // Only LeakyReLU needs negative_slope
+            if(this.state.params.type === "LeakyReLU") {
+                content.params = this.state.params
+            } else {
+                content.params = {
+                    type: this.state.params.type
+                }
+            }
+        } else {
+            content.params = this.state.params
+        }
+
         if(this.state.parent_names.length < 2) {
             this.setState({
                 alert: "You have to specify a parent name!"

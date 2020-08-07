@@ -31,7 +31,10 @@ function updateDict(net, parent_names, content) {
     return net;
 }
 
-// This function is used to transform a string of numbers into numbers
+/* The size parameters can be a list of numbers divided by ","
+This function can transform the string divided by "," into a list of numbers
+This function can also transform "negative_slope", "probability" string into float values
+ */
 function validContentParams(content) {
     let newContent = Object.assign({}, content);
     if(newContent.hasOwnProperty("input")) {
@@ -46,7 +49,10 @@ function validContentParams(content) {
             if(default_params[newContent.type][key].type === "text" || default_params[newContent.type][key].type === "number")
                 if(typeof(newContent.params[key]) == "string")
                     if(newContent.params[key].indexOf(',') === -1)
-                        newContent.params[key] = parseInt(newContent.params[key]);
+                        if(key === "negative_slope" || key === "probability")
+                            newContent.params[key] = parseFloat(newContent.params[key]);
+                        else
+                            newContent.params[key] = parseInt(newContent.params[key]);
                     else {
                         let content_elements = newContent.params[key].split(',')
                         let update_content = []
