@@ -43,7 +43,7 @@ export const default_params = {
         num_out: {type: "number", value: 1}
     },
     activation: {
-        type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU"]},
+        type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU", "tanh"]},
         negative_slope: {type: "text", value: 0.2}
     },
     reparameterize: {
