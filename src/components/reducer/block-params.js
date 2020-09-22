@@ -43,7 +43,7 @@ export const default_params = {
         num_out: {type: "number", value: 1}
     },
     activation: {
-        type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU", "tanh"]},
+        type: {type: "select", value: ["LeakyReLU", "Sigmoid", "ReLU", "Tanh"]},
         negative_slope: {type: "text", value: 0.2}
     },
     reparameterize: {
@@ -51,6 +51,19 @@ export const default_params = {
     },
     dropout2d: {
         probability: {type: "text", value: 0.2}
+
+    },
+    pad: {
+        type: {type: "select", value: ["reflect", "replicate"]},
+        padding: {type: "text", value: 1}
+    },
+    avgPool2d: {
+        kernel_size: {type: "text", value: 3},
+        stride: {type: "text", value: 1},
+        padding: {type: "text", value: 1},
+        count_include_pad: {type: "number", value: 0}
+    },
+    addition: {
 
     }
 }

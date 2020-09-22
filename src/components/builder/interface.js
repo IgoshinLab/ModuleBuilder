@@ -62,6 +62,9 @@ class Interface extends React.Component {
                           <option value="activation">Activation</option>
                           <option value="sequential">Sequential</option>
                           <option value="dropout2d">Dropout2d</option>
+                          <option value="pad">Pad</option>
+                          <option value="avgPool2d">AvgPool2d</option>
+                          <option value="addition">Addition</option>
                       </select>
                   </div>
                   <Conv key={this.props.parent_names}
