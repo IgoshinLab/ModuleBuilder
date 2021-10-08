@@ -39,7 +39,7 @@ export const default_params = {
         axis: {type: "number", value: 1}
     },
     normalization: {
-        type: {type: "select", value: ["BatchNorm2d", "PixelNorm"]},
+        type: {type: "select", value: ["BatchNorm1d", "BatchNorm2d", "PixelNorm"]},
         num_out: {type: "number", value: 1}
     },
     activation: {
@@ -49,9 +49,9 @@ export const default_params = {
     reparameterize: {
 
     },
-    dropout2d: {
+    dropout: {
+        type: {type: "select", value: ["1d", "2d", "3d"]},
         probability: {type: "text", value: 0.2}
-
     },
     pad: {
         type: {type: "select", value: ["reflect", "replicate"]},

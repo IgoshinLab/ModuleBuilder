@@ -39,7 +39,7 @@ class Interface extends React.Component {
   render() {
     return (
         <div className="builder_interface">
-            model builder - v 0.1
+            model builder - v 0.2
           <div className="builder">
               <div className="left_panel">
                   <Show {...this.props} containerRef={(ref) => this.current = ref} />
@@ -61,7 +61,7 @@ class Interface extends React.Component {
                           <option value="normalization">Normalization</option>
                           <option value="activation">Activation</option>
                           <option value="sequential">Sequential</option>
-                          <option value="dropout2d">Dropout2d</option>
+                          <option value="dropout">Dropout</option>
                           <option value="pad">Pad</option>
                           <option value="avgPool2d">AvgPool2d</option>
                           <option value="addition">Addition</option>
